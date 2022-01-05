@@ -1,0 +1,4 @@
+querier*
+!querier.c
+fuzzquery*
+!fuzzquery.c

@@ -1,0 +1,98 @@
+bash -v testing.sh
+# testing.sh - testing for indexer and indextest
+
+# Jason Chen
+# CS 50, Lab 5
+
+# call crawler to create the directory
+mkdir ../crawler/dir
+../crawler/crawler http://cs50tse.cs.dartmouth.edu/tse/ ../crawler/dir 1
+ 0   Fetched: http://cs50tse.cs.dartmouth.edu/tse/
+ 0  Scanning: http://cs50tse.cs.dartmouth.edu/tse/
+ 1      Found: http://cs50tse.cs.dartmouth.edu/tse/../
+ 1   IgnExtrn: http://cs50tse.cs.dartmouth.edu/
+ 1      Found: http://cs50tse.cs.dartmouth.edu/tse/letters/
+ 1      added: http://cs50tse.cs.dartmouth.edu/tse/letters/
+ 1      Found: http://cs50tse.cs.dartmouth.edu/tse/toscrape/
+ 1      added: http://cs50tse.cs.dartmouth.edu/tse/toscrape/
+ 1      Found: http://cs50tse.cs.dartmouth.edu/tse/wikipedia/
+ 1      added: http://cs50tse.cs.dartmouth.edu/tse/wikipedia/
+ 1    Fetched: http://cs50tse.cs.dartmouth.edu/tse/wikipedia/
+ 1    Fetched: http://cs50tse.cs.dartmouth.edu/tse/toscrape/
+ 1    Fetched: http://cs50tse.cs.dartmouth.edu/tse/letters/
+
+# valid inputs
+./indexer ../crawler/dir indexfile
+
+# testing indextest
+./indextest indexfile newindexfile
+
+# sort and compare
+gawk -f indexsort.awk indexfile > indexfile.sorted
+gawk -f indexsort.awk newindexfile > newindexfile.sorted 
+diff indexfile.sorted newindexfile.sorted
+
+# testing empty directory
+mkdir emptydir
+./indexer emptydir emptyfile
+./indextest emptydir newemptyfile
+
+#sort and compare
+gawk -f indexsort.awk emptyfile > emptyfile.sorted
+gawk -f indexsort.awk newemptyfile > newemptyfile.sorted 
+diff emptyfile newemptyfile
+
+
+# invalid inputs
+./indexer ../crawler/dir indexfile/
+index file unsucessfully opened
+
+# nonexistent file
+./indexer ../crawler/nodir file
+directory does not exist 
+
+# nonexistent file
+./indexer nossdir file
+directory does not exist 
+
+# invalid inputs
+./indexer ../crawler/dir
+Usage: ./indexer pageDirectory indexFilename 
+
+# invalid inputs
+./indexer ../crawler/dir file anotherfile
+Usage: ./indexer pageDirectory indexFilename 
+
+# -------indextest-------
+# nonexistent file
+./indextest randomfile newindexfile
+oldIndexFile unsucessfully opened or read
+
+# invalid filename
+./indextest indexfile/ newindexfile
+oldIndexFile unsucessfully opened or read
+
+# invalid filename
+./indextest indexfile newindexfile/
+newIndexFile unsucessfully opened
+
+# invalid input
+./indextest indexfile
+Usage: ./indexer oldIndexName newIndexFile 
+
+# invalid filename
+./indextest indexfile/ newindexfile anotherfile
+Usage: ./indexer oldIndexName newIndexFile 
+
+# remove the files
+rm indexfile*
+rm newindexfile*
+rm emptyfile*
+rm newemptyfile*
+rm -rf emptydir
+rm -rf ../crawler/dir
+
+
+
+
+exit 0
