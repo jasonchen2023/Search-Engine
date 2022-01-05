@@ -1,6 +1,6 @@
 # Search Engine
 
-A search engine that takes in a query from user and returns a set of documents found based on frequency of query appearance.
+A search engine written in C that takes in a query from user and returns a set of documents found based on frequency of query appearance.
 
 ## Crawler
 
